@@ -1,4 +1,22 @@
 from typing import Literal
+import json
+import os
+
+DATA_PATH = os.path.join(os.path.dirname(__file__), "data")
+
+def load_json(filename: str) -> dict:
+    """
+    Load a JSON file from the specified path.
+
+    Parameters:
+    filename (str): Name of the JSON file to load.
+
+    Returns:
+    dict: Parsed JSON data.
+    """
+    filepath = os.path.join(DATA_PATH, filename)
+    with open(filepath, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 class Fadigue:
 
@@ -31,12 +49,7 @@ class Fadigue:
         Returns:
         float: The calculated load correction factor.
         """
-        load_factors = {
-            'tension': 1.0,
-            'compression': 0.85,
-            'bending': 0.7,
-            'torsion': 0.6
-        }
+        load_factors = load_json("load_factors.json")
         if load_type in load_factors:
             return load_factors[load_type]
         else:
@@ -80,12 +93,7 @@ class Fadigue:
         Returns:
         float: The calculated surface finish correction factor.
         """
-        finish={
-            'ground': [1.58,-0.085],
-            'machined': [4.51,-0.265],
-            'hot-rolled': [57.7,-0.718],
-            'as-forged': [272,-0.995]
-        }
+        finish = load_json("surface_finish.json")
         if surface_finish in finish:
             a, b = finish[surface_finish]
             if a * ultimate_strength**b <1:
@@ -126,18 +134,11 @@ class Fadigue:
         Returns:
         float: The calculated reliability correction factor.
         """
-        z_values = {
-            0.5: 1,
-            0.9: 0.897,
-            0.99: 0.814,
-            0.999: 0.753,
-            0.9999: 0.702,
-            0.99999: 0.659
-        }
-        if reliability in z_values:
-            return z_values[reliability]
-        else:
-            raise ValueError("Reliability must be one of the following values: 0.5, 0.9, 0.99, 0.999, or 0.9999.")
+        reliab = load_json("reliability.json")
+        key = str(reliability)
+        if key in reliab:
+            return reliab[key]
+        raise ValueError("Reliability must be one of the following values: 0.5, 0.9, 0.99, 0.999, or 0.9999.")
 
     @staticmethod
     def endurance_limit_factor(ultimate_strength:float, material:Literal['steel', 'aluminum', 'titanium']) -> float:
