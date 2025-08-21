@@ -1,1 +1,1 @@
-from .Fadigue import *
+from .Fatigue import *
