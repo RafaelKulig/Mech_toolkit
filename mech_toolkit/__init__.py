@@ -1,0 +1,1 @@
+from .Fatigue import *
