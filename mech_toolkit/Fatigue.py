@@ -160,33 +160,3 @@ class Fatigue:
             return 0.3 * ultimate_strength
         else:
             raise ValueError("Invalid material type. Choose from 'steel', 'aluminum', or 'titanium'.")
-
-class Shaft:
-
-    @staticmethod    
-    def shaft_diameter(inflex_moment: float, torsion_moment: float, diameter_estimative: float, temperature: float, material: str):
-        
-        K_f=...
-        M_a=...
-        S_f=...
-        T_m=...
-        S_y=...
-        N_f=...
-        
-
-
-
-
-
-
-
-        
-        # ASME equation for shaft diameter under combined loading
-        A = (K_f*M_a/S_f)**2
-        B = (3/4)*(T_m/S_y)**2
-        C = (32 * N_f * 355 / 113)*(A + B)**0.5
-        
-        d_ASME = C**(1/3)
-
-        
-        
