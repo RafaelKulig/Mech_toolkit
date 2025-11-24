@@ -33,7 +33,7 @@ class Interpolation:
     def _divided_differences(self) -> list:
         """Compute the divided differences table."""
         n = self.n
-        coef = [[0 for _ in range(n)] for _ in range(n)]
+        coef:list = [[0 for _ in range(n)] for _ in range(n)]
         for i in range(n):
             coef[i][0] = self.y_values[i]
         for j in range(1, n):
@@ -91,10 +91,10 @@ class Interpolation:
             raise ValueError("x is outside the range of x_values.")
         n = self.n
         h = [self.x_values[i + 1] - self.x_values[i] for i in range(n - 1)]
-        alpha = [0] * (n - 1)
+        alpha:list = [0] * (n - 1)
         for i in range(1, n - 1):
             alpha[i] = (3 / h[i]) * (self.y_values[i + 1] - self.y_values[i]) - (3 / h[i - 1]) * (self.y_values[i] - self.y_values[i - 1])
-        l = [1] + [0] * (n - 1)
+        l:list = [1] + [0] * (n - 1)
         mu = [0] * (n - 1)
         z = [0] * n
         for i in range(1, n - 1):
@@ -104,8 +104,8 @@ class Interpolation:
         l[n - 1] = 1
         z[n - 1] = 0
         c = [0] * n
-        b = [0] * (n - 1)
-        d = [0] * (n - 1)
+        b:list = [0] * (n - 1)
+        d:list = [0] * (n - 1)
         for j in range(n - 2, -1, -1):
             c[j] = z[j] - mu[j] * c[j + 1]
             b[j] = (self.y_values[j + 1] - self.y_values[j]) / h[j] - h[j] * (c[j + 1] + 2 * c[j]) / 3
