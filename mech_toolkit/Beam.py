@@ -90,7 +90,3 @@ class Beam_Calculator:
                 f"  R_A_y: {RAy:.2f} N\n"
                 f"  R_B_x: {RBx:.2f} N\n"
                 f"  R_B_y: {RBy:.2f} N\n")
-
-print(Beam_Calculator(1.050, 24, 0, 270, support_A_position=.25, support_B_position=1.050, support_A='bearing', support_B='bearing').__str__())
-print(Beam_Calculator(17, 65, 5, 270, support_A_position=3, support_B_position=11).__str__())
-print(Beam_Calculator(10, 10, 3, 90, support_A_position=2, support_B_position=5, support_A='fixed', support_B='fixed').__str__())
