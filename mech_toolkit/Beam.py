@@ -102,7 +102,7 @@ class Beam_Calculator:
         plt.axhline(0, color='black', linewidth=0.8, linestyle='--')
         plt.grid()
         plt.legend()
-        plt.show()
+        plt.savefig('shear_diagram.png')
 
     def __str__(self) -> str:
         RAx, RAy, RBx, RBy = self.reactions
@@ -115,6 +115,3 @@ class Beam_Calculator:
                 f"\tR_A_y: {RAy:.2f} N\n"
                 f"\tR_B_x: {RBx:.2f} N\n"
                 f"\tR_B_y: {RBy:.2f} N\n")
-
-# Example usage:
-Beam_Calculator(11, 65_000, 5, 270, "fixed", "roller", 3, 11).shear_diagram()
