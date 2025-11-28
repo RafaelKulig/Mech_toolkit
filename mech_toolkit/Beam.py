@@ -1,5 +1,7 @@
 import math
 from typing import List, Tuple
+import matplotlib.pyplot as plt
+
 class Beam_Calculator:
     """
     Initialy for 2D beam with only one load applied.
@@ -76,8 +78,31 @@ class Beam_Calculator:
             RAx = -Px if self.support_A == "fixed" else 0.0
             RBx = -Px if self.support_B == "fixed" else 0.0
             
-
         return (RAx, RAy, RBx, RBy)
+
+    def shear_diagram(self):
+        """
+        Plot the shear force diagram.
+        """
+        Px = self.load * math.cos(self.load_angle)
+        Py = self.load * math.sin(self.load_angle)
+        Py_abs = abs(Py)
+
+        RAx, RAy, RBx, RBy = self.reactions
+
+        x_values = [0, self.load_position, self.load_position, self.lenght]
+        shear_values = [RAy, RAy, RAy - Py_abs, RAy - Py_abs + RBy]
+
+        plt.figure(figsize=(10, 5))
+        plt.plot(x_values, shear_values, drawstyle='steps-post', label='Shear Force', color='blue')
+        plt.fill_between(x_values, shear_values, step='post', alpha=0.3, color='blue')
+        plt.title('Shear Force Diagram')
+        plt.xlabel('Position along Beam (m)')
+        plt.ylabel('Shear Force (N)')
+        plt.axhline(0, color='black', linewidth=0.8, linestyle='--')
+        plt.grid()
+        plt.legend()
+        plt.show()
 
     def __str__(self) -> str:
         RAx, RAy, RBx, RBy = self.reactions
@@ -86,7 +111,10 @@ class Beam_Calculator:
                 f"Support A: {self.support_A} at {self.support_A_position} m\n"
                 f"Support B: {self.support_B} at {self.support_B_position} m\n"
                 f"Reactions:\n"
-                f"  R_A_x: {RAx:.2f} N\n"
-                f"  R_A_y: {RAy:.2f} N\n"
-                f"  R_B_x: {RBx:.2f} N\n"
-                f"  R_B_y: {RBy:.2f} N\n")
+                f"\tR_A_x: {RAx:.2f} N\n"
+                f"\tR_A_y: {RAy:.2f} N\n"
+                f"\tR_B_x: {RBx:.2f} N\n"
+                f"\tR_B_y: {RBy:.2f} N\n")
+
+# Example usage:
+Beam_Calculator(11, 65_000, 5, 270, "fixed", "roller", 3, 11).shear_diagram()
