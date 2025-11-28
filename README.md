@@ -27,9 +27,8 @@ If you don't have packaging files, you can still import the package by adding th
   - `Beam.py` — beam-related calculations and helpers
   - `Fatigue.py` — fatigue life and S-N curve tools
   - `Gears.py` — gear geometry and strength calculations
-  - `Mohr.py` — Mohr's circle / stress transformation helpers
+  - `Stress.py` — Mohr's circle / stress transformation helpers
   - `Numerical_Methods.py` — small numerical utilities used by other modules
-  - `Stress.py` — stress analysis helpers
   - `data/` — JSON lookup tables used by the package
 
 Data files in `mech_toolkit/data`:
