@@ -1,40 +1,62 @@
-import math
 import numpy as np
 import matplotlib.pyplot as plt
 
-class Stress:
+class Mohr_Circle:
+    """
+    Class to create and plot Mohr's Circle for 2D stress analysis.
+    Attributes:
+        sigma_x (float): Normal stress in the x-direction.
+        sigma_y (float): Normal stress in the y-direction.
+        tau_xy (float): Shear stress.
+    """
+    def __init__(self, sigma_x: float, sigma_y: float, tau_xy: float):
+        self.sigma_x = sigma_x
+        self.sigma_y = sigma_y
+        self.tau_xy = tau_xy
+        self.center = (sigma_x + sigma_y) / 2
+        self.radius = np.sqrt(((sigma_x - sigma_y) / 2) ** 2 + tau_xy ** 2)
+        self.theta_p = 0.5 * np.arctan2(2 * tau_xy, sigma_x - sigma_y)  # in radians
 
-    @staticmethod
-    def calculate_stress(s_x: float, s_y: float, t_xy: float, show_values: bool = False) -> tuple:
+    def principal_stresses(self) -> tuple:
         """
-        Calculate the average normal stress, maximum shear stress, principal stresses, and principal plane angle.
-        Parameters:
-        s_x (float): Normal stress in the x-direction.
-        s_y (float): Normal stress in the y-direction.
-        t_xy (float): Shear stress in the xy-plane.
-        show_values (bool): If True, prints the calculated values.
+        Calculate the principal stresses.
         Returns:
-        tuple: A tuple containing the average normal stress, maximum shear stress, principal stresses, and principal plane angle.
+            Tuple containing principal stresses (sigma_1, sigma_2).
         """
-        if not isinstance(s_x, (int, float)) or not isinstance(s_y, (int, float)) or not isinstance(t_xy, (int, float)):
-            raise TypeError("s_x, s_y, and t_xy must be numeric values.")
-        if s_x == 0 and s_y == 0 and t_xy == 0:
-            raise ValueError("Seriously? All stresses are zero? What are you trying to calculate?")
-        avg_stress = (s_x + s_y) / 2
-        radius=math.sqrt(((s_x - s_y) / 2) ** 2 + t_xy ** 2)
-        stress_1 = avg_stress + radius
-        stress_2 = avg_stress - radius
-
-        theta_rad=math.atan2(2 * t_xy, s_x - s_y)
-        theta_deg=math.degrees(theta_rad) / 2
-
-        principal_points = [(stress_1,0.), (stress_2, 0.)] # This will be used for a plotting feature later
+        sigma_1 = self.center + self.radius
+        sigma_2 = self.center - self.radius
+        return (sigma_1, sigma_2)
     
+    def plot(self):
+        """
+        Plot Mohr's Circle.
+        """
+        fig, ax = plt.subplots(figsize=(8, 8))
+        circle = plt.Circle((self.center, 0), self.radius, color='b', fill=False, label="Mohr's Circle")
+        ax.add_artist(circle)
 
-        if show_values:
-            print(f"\nAverage normal stress: {avg_stress:.2f}")
-            print(f"Maximum shear stress: {radius:.2f}")
-            print(f"Principal stresses:\n\tσ1 = {stress_1:.2f}\n\tσ2 = {stress_2:.2f}")
-            print(f"Principal plane angle: {theta_deg:.2f}°\n")
+        # Plot principal stresses
+        sigma_1, sigma_2 = self.principal_stresses()
+        ax.plot([sigma_1, sigma_2], [0, 0], 'go', label='Principal Stresses')
 
-        return (avg_stress, radius, stress_1, stress_2, theta_deg)
+        # Plot original stress state
+        ax.plot([self.sigma_x, self.sigma_y], [self.tau_xy, -self.tau_xy], 'ro--', label='Original Stress State')
+
+        # Axes settings
+        ax.set_xlim(self.center - self.radius - 10, self.center + self.radius + 10)
+        ax.set_ylim(-self.radius - 10, self.radius + 10)
+        ax.set_xlabel('Normal Stress (σ)')
+        ax.set_ylabel('Shear Stress (τ)')
+        ax.axhline(0, color='black',linewidth=0.5, ls='--')
+        ax.axvline(0, color='black',linewidth=0.5, ls='--')
+        ax.set_aspect('equal', adjustable='box')
+        ax.grid()
+        ax.legend()
+        plt.title("Mohr's Circle")
+        plt.show()
+    
+    def __str__(self) -> str:
+        sigma_1, sigma_2 = self.principal_stresses()
+        theta_p_deg = np.degrees(self.theta_p)
+        return (f"Principal Stress σ1: {sigma_1:.2f}, Principal Stress σ2: {sigma_2:.2f}, "
+                f"Angle of Principal Planes: {theta_p_deg:.2f} degrees")
