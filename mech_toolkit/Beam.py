@@ -79,31 +79,56 @@ class Beam_Calculator:
             RBx = -Px if self.support_B == "fixed" else 0.0
             
         return (RAx, RAy, RBx, RBy)
+    # Not working properly yet
+    # def shear_diagram(self):
+    #     """
+    #     Plot the shear force diagram.
+    #     """
+    #     Px = self.load * math.cos(self.load_angle)
+    #     Py = self.load * math.sin(self.load_angle)
+    #     Py_abs = abs(Py)
 
-    def shear_diagram(self):
-        """
-        Plot the shear force diagram.
-        """
-        Px = self.load * math.cos(self.load_angle)
-        Py = self.load * math.sin(self.load_angle)
-        Py_abs = abs(Py)
+    #     RAx, RAy, RBx, RBy = self.reactions
 
-        RAx, RAy, RBx, RBy = self.reactions
+    #     x_values = [0, self.load_position, self.load_position, self.lenght]
+    #     shear_values = [RAy, RAy, RAy - Py_abs, RAy - Py_abs + RBy]
 
-        x_values = [0, self.load_position, self.load_position, self.lenght]
-        shear_values = [RAy, RAy, RAy - Py_abs, RAy - Py_abs + RBy]
+    #     plt.figure(figsize=(10, 5))
+    #     plt.plot(x_values, shear_values, drawstyle='steps-post', label='Shear Force', color='blue')
+    #     plt.fill_between(x_values, shear_values, step='post', alpha=0.3, color='blue')
+    #     plt.title('Shear Force Diagram')
+    #     plt.xlabel('Position along Beam (m)')
+    #     plt.ylabel('Shear Force (N)')
+    #     plt.axhline(0, color='black', linewidth=0.8, linestyle='--')
+    #     plt.grid()
+    #     plt.legend()
+    #     # plt.savefig('shear_diagram.png')
+    #     plt.show()
 
-        plt.figure(figsize=(10, 5))
-        plt.plot(x_values, shear_values, drawstyle='steps-post', label='Shear Force', color='blue')
-        plt.fill_between(x_values, shear_values, step='post', alpha=0.3, color='blue')
-        plt.title('Shear Force Diagram')
-        plt.xlabel('Position along Beam (m)')
-        plt.ylabel('Shear Force (N)')
-        plt.axhline(0, color='black', linewidth=0.8, linestyle='--')
-        plt.grid()
-        plt.legend()
-        # plt.savefig('shear_diagram.png')
-        plt.show()
+    # def bending_moment_diagram(self):
+    #     """
+    #     Plot the bending moment diagram.
+    #     """
+    #     Px = self.load * math.cos(self.load_angle)
+    #     Py = self.load * math.sin(self.load_angle)
+    #     Py_abs = abs(Py)
+
+    #     RAx, RAy, RBx, RBy = self.reactions
+
+    #     x_values = [0, self.load_position, self.lenght]
+    #     moment_values = [0, RAy * self.load_position, RAy * self.lenght - Py_abs * (self.lenght - self.load_position)]
+
+    #     plt.figure(figsize=(10, 5))
+    #     plt.plot(x_values, moment_values, label='Bending Moment', color='red')
+    #     plt.fill_between(x_values, moment_values, alpha=0.3, color='red')
+    #     plt.title('Bending Moment Diagram')
+    #     plt.xlabel('Position along Beam (m)')
+    #     plt.ylabel('Bending Moment (Nm)')
+    #     plt.axhline(0, color='black', linewidth=0.8, linestyle='--')
+    #     plt.grid()
+    #     plt.legend()
+    #     # plt.savefig('bending_moment_diagram.png')
+    #     plt.show()
 
     def __str__(self) -> str:
         RAx, RAy, RBx, RBy = self.reactions
