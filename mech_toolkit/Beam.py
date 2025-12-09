@@ -7,7 +7,7 @@ class Beam_Calculator:
     Initialy for 2D beam with only one load applied.
 
     """
-    def __init__(self,lenght: float, load: float, load_position: float, load_angle: float = 90, support_A: str = "fixed", support_B: str = "roller", support_A_position: float = 0, support_B_position: float = None):
+    def __init__(self,lenght: float, load: float, load_position: float, load_angle: float = 90, support_A: str = "fixed", support_B: str = "roller", support_A_position: float = 0, support_B_position: float = None): # type: ignore
         self.lenght = lenght
         self.load = load
         self.load_position = load_position

@@ -32,7 +32,7 @@ class Mohr_Circle:
         Plot Mohr's Circle.
         """
         fig, ax = plt.subplots(figsize=(8, 8))
-        circle = plt.Circle((self.center, 0), self.radius, color='b', fill=False, label="Mohr's Circle")
+        circle = plt.Circle((self.center, 0), self.radius, color='b', fill=False, label="Mohr's Circle")  # type: ignore
         ax.add_artist(circle)
 
         # Plot principal stresses
