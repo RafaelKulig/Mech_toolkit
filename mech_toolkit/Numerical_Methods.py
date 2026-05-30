@@ -296,8 +296,9 @@ class Solutions:
         f: Callable[[float], float],
         a: float,
         b: float,
-        error: float,
-        max_iter: int,
+        print_iterations: bool = False,
+        error: float = 1e-8,
+        max_iter: int = 100,
     ):
         """
         Bisection method to find a root of the function f in the interval [a, b].
@@ -305,6 +306,7 @@ class Solutions:
             f: The function for which to find the root.
             a: The start of the interval.
             b: The end of the interval.
+            print_iterations: Whether to print the details of each iteration.
             error: The acceptable error margin.
             max_iter: The maximum number of iterations to perform.
         Returns:
@@ -317,8 +319,13 @@ class Solutions:
         if f(a) * f(b) >= 0:
             raise ValueError("f(a) and f(b) must have different signs.")
         F_a = f(a)
+        if print_iterations:
+            print(f"{'Iteration':^10} | {'a':^10} | {'b':^10} | {'f(a)':^10} | {'f(b)':^10} | {'Midpoint':^10} | {'f(Midpoint)':^15}")
+            print("=" * 91)
         i = 0
         while i <= max_iter:
+            if print_iterations:
+                print(f"{i:^10} | {a:^10.6f} | {b:^10.6f} | {F_a:^10.6f} | {f(b):^10.6f} | {(a + b) / 2:^10.6f} | {f((a + b) / 2):^15.6f}")
             if (F_x := f(x := (a + b) / 2)) == 0 or (b - a) / 2 < error:
                 return x, i
 
@@ -333,49 +340,56 @@ class Solutions:
     def fixed_point(
         g: Callable[[float], float], 
         x0: float, 
-        error: float, 
-        max_iter: int
+        print_iterations: bool = False,
+        error: float = 1e-8, 
+        max_iter: int = 100
     ):
         """
         Fixed Point Iteration method to find a fixed point of the function g.
         Args:
-            g: The function for which to find the fixed point.
-            x0: The initial guess.
-            error: The acceptable error margin.
-            max_iter: The maximum number of iterations to perform.
+            :g: The function for which to find the fixed point.
+            :x0: The initial guess.
+            :print_iterations: Whether to print the details of each iteration.
+            :error: The acceptable error margin.
+            :max_iter: The maximum number of iterations to perform.
         Returns:
             A tuple containing the fixed point and the number of iterations performed.
-        Raises:
-            ValueError: If the method fails to converge within the maximum number of iterations.
         """
         if error <= 0 or max_iter <= 0:
             raise ValueError("Error and max_iter must be positive values.")
         i = 0
         x_n = x0
+        if print_iterations:
+            print(f"{'Iteration':^10} | {'x_n':^10} | {'g(x_n)':^10} | {'Error':^10}")
+            print("=" * 50)
         while i <= max_iter:
+            if print_iterations:
+                print(f"{i:^10} | {x_n:^10.6f} | {g(x_n):^10.6f} | {abs(g(x_n) - x_n):^10.6f}")
             x_n1 = g(x_n)
             if abs(x_n1 - x_n) < error:
                 return x_n1, i
             x_n = x_n1
             i += 1
-        raise ValueError("Method failed after maximum iterations")
+        print("Method failed after maximum iterations")
 
     @staticmethod
     def newton_raphson(
         f: Callable[[float], float],
         df: Callable[[float], float],
         x0: float,
-        error: float,
-        max_iter: int,
+        error: float = 1e-8,
+        max_iter: int = 100,
+        print_iterations: bool = False
     ):
         """
         Newton-Raphson method to find a root of the function f.
         Args:
-            f: The function for which to find the root.
-            df: The derivative of the function f.
-            x0: The initial guess.
-            error: The acceptable error margin.
-            max_iter: The maximum number of iterations to perform.
+            :f: The function for which to find the root.
+            :df: The derivative of the function f.
+            :x0: The initial guess.
+            :error: The acceptable error margin.
+            :max_iter: The maximum number of iterations to perform.
+            :print_iterations: Whether to print the details of each iteration.
         Returns:
             A tuple containing the root and the number of iterations performed.
         Raises:
@@ -385,7 +399,12 @@ class Solutions:
             raise ValueError("Error and max_iter must be positive values.")
         i = 0
         x_n = x0
+        if print_iterations:
+            print(f"{'Iteration':^10} | {'x_n':^10} | {'f(x_n)':^10} | {'Error':^10}")
+            print("=" * 50)
         while i <= max_iter:
+            if print_iterations:
+                print(f"{i:^10} | {x_n:^10.6f} | {f(x_n):^10.6f} | {abs(f(x_n)):^10.6f}")
             df_xn = df(x_n)
             if df_xn == 0:
                 raise ValueError("Derivative is zero. No solution found.")
@@ -394,24 +413,26 @@ class Solutions:
                 return x_n1, i
             x_n = x_n1
             i += 1
-        raise ValueError("Method failed after maximum iterations")
+        print("Method failed after maximum iterations")
 
     @staticmethod
     def secant(
         f: Callable[[float], float], 
         x0: float, 
         x1: float, 
-        error: float, 
-        max_iter: int
+        error: float = 1e-8, 
+        max_iter: int = 100,
+        print_iterations: bool = False
     ):
         """
         Secant method to find a root of the function f.
         Args:
-            f: The function for which to find the root.
-            x0: The first initial guess.
-            x1: The second initial guess.
-            error: The acceptable error margin.
-            max_iter: The maximum number of iterations to perform.
+            :f: The function for which to find the root.
+            :x0: The first initial guess.
+            :x1: The second initial guess.
+            :error: The acceptable error margin.
+            :max_iter: The maximum number of iterations to perform.
+            :print_iterations: Whether to print the details of each iteration.
         Returns:
             A tuple containing the root and the number of iterations performed.
         Raises:
@@ -420,34 +441,41 @@ class Solutions:
         if error <= 0 or max_iter <= 0:
             raise ValueError("Error and max_iter must be positive values.")
         i = 0
+        if print_iterations:
+            print(f"{'Iteration':^10} | {'x0':^10} | {'x1':^10} | {'x2':^10}")
+            print("=" * 50)
         while i <= max_iter:
             f_x0 = f(x0)
             f_x1 = f(x1)
             if f_x1 - f_x0 == 0:
                 raise ValueError("Division by zero. No solution found.")
             x2 = x1 - f_x1 * (x1 - x0) / (f_x1 - f_x0)
+            if print_iterations:
+                print(f"{i:^10} | {x0:^10.6f} | {x1:^10.6f} | {x2:^10.6f}")
             if abs(x2 - x1) < error:
                 return x2, i
             x0, x1 = x1, x2
             i += 1
-        raise ValueError("Method failed after maximum iterations")
+        print("Method failed after maximum iterations")
 
     @staticmethod
     def regula_falsi(
         f: Callable[[float], float], 
         a: float, 
         b: float, 
-        error: float, 
-        max_iter: int
+        error: float = 1e-8, 
+        max_iter: int = 100,
+        print_iterations: bool = False
     ):
         """
         Regula Falsi method to find a root of the function f in the interval [a, b].
         Args:
-            f: The function for which to find the root.
-            a: The start of the interval.
-            b: The end of the interval.
-            error: The acceptable error margin.
-            max_iter: The maximum number of iterations to perform.
+            :f: The function for which to find the root.
+            :a: The start of the interval.
+            :b: The end of the interval.
+            :error: The acceptable error margin.
+            :max_iter: The maximum number of iterations to perform.
+            :print_iterations: Whether to print the details of each iteration.
         Returns:
             A tuple containing the root and the number of iterations performed.
         Raises:
@@ -460,7 +488,12 @@ class Solutions:
         F_a = f(a)
         F_b = f(b)
         i = 0
+        if print_iterations:
+            print(f"{'Iteration':^10} | {'a':^10} | {'b':^10} | {'x':^10}")
+            print("=" * 50)
         while i <= max_iter:
+            if print_iterations:
+                print(f"{i:^10} | {a:^10.6f} | {b:^10.6f} | {(a * F_b - b * F_a) / (F_b - F_a):^10.6f}")
             if (F_x := f(x := (a * F_b - b * F_a) / (F_b - F_a))) == 0 or abs(
                 F_x
             ) < error:
@@ -471,7 +504,7 @@ class Solutions:
             else:
                 b, F_b = x, F_x
             i += 1
-        raise ValueError("Method failed after maximum iterations")
+        print("Method failed after maximum iterations")
 
     @staticmethod
     def muller(
@@ -479,18 +512,20 @@ class Solutions:
         x0: float,
         x1: float,
         x2: float,
-        error: float,
-        max_iter: int,
+        error: float = 1e-8,
+        max_iter: int = 100,
+        print_iterations: bool = False
     ):
         """
         Muller method to find a root of the function f.
         Args:
-            f: The function for which to find the root.
-            x0: The first initial guess.
-            x1: The second initial guess.
-            x2: The third initial guess.
-            error: The acceptable error margin.
-            max_iter: The maximum number of iterations to perform.
+            :f: The function for which to find the root.
+            :x0: The first initial guess.
+            :x1: The second initial guess.
+            :x2: The third initial guess.
+            :error: The acceptable error margin.
+            :max_iter: The maximum number of iterations to perform.
+            :print_iterations: Whether to print the details of each iteration.
         Returns:
             A tuple containing the root and the number of iterations performed.
         Raises:
@@ -499,6 +534,9 @@ class Solutions:
         if error <= 0 or max_iter <= 0:
             raise ValueError("Error and max_iter must be positive values.")
         i = 0
+        if print_iterations:
+            print(f"{'Iteration':^10} | {'x0':^10} | {'x1':^10} | {'x2':^10} | {'x3':^10}")
+            print("=" * 60)
         while i <= max_iter:
             f_x0 = f(x0)
             f_x1 = f(x1)
@@ -526,10 +564,11 @@ class Solutions:
             if denominator == 0:
                 raise ValueError("Division by zero. No solution found.")
             x3 = x2 - (2 * c) / denominator
-
+            if print_iterations:
+                print(f"{i:^10} | {x0:^10.6f} | {x1:^10.6f} | {x2:^10.6f} | {x3:^10.6f}")
             if abs(x3 - x2) < error:
                 return x3, i
 
             x0, x1, x2 = x1, x2, x3
             i += 1
-        raise ValueError("Method failed after maximum iterations")
+        print("Method failed after maximum iterations")
